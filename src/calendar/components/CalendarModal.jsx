@@ -5,10 +5,12 @@ import { addHours, differenceInSeconds } from 'date-fns'
 import es from 'date-fns/locale/es';
 import Swal from 'sweetalert2'
 
-registerLocale('es', es)
-
 import 'react-datepicker/dist/react-datepicker.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
+import { useForm, useUiStore } from '../../hooks';
+
+registerLocale('es', es)
+Modal.setAppElement('#root')
 
 const customStyles = {
   content: {
@@ -21,19 +23,19 @@ const customStyles = {
   }
 }
 
-Modal.setAppElement('#root');
+const dates = {
+  title: 'Fernanda',
+  notes: 'Velásquez',
+  start: new Date(),
+  end: addHours( new Date(), 2 )
+}
+
 
 export const CalendarModal = () => {
 
-  const [ isOpen, setIsOpen ] = useState( true )
+  const { isDateModalOpen, closeDateModal } = useUiStore()
+  const { formValues, onInputChange, onDateChanged } = useForm( dates )
   const [ formSubmitted, setFormSubmitted ] = useState( false )
-
-  const [ formValues, setFormValues ] = useState({
-    title: 'Fernanda',
-    notes: 'Velásquez',
-    start: new Date(),
-    end: addHours( new Date(), 2 )
-  })
 
   const titleClass = useMemo(() => {
     if( !formSubmitted ) return ''
@@ -41,24 +43,6 @@ export const CalendarModal = () => {
     return formValues.title.length > 0 ? '' : 'is-invalid'
   }, [ formValues.title, formSubmitted ])
 
-  const onInputChange = ({ target }) => {
-    setFormValues({
-      ...formValues,
-      [target.name]: target.value
-    })
-  }
-
-  const onDateChanged = ( event, chaning ) => {
-    setFormValues({
-      ...formValues,
-      [chaning]: event
-    })
-  }
-
-  const onCloseModal = () => {
-    console.log('cerrando modal')
-    setIsOpen( false )
-  }
 
   const onSubmit = ( event ) => {
     event.preventDefault()
@@ -74,14 +58,12 @@ export const CalendarModal = () => {
     if( formValues.title.length <= 0 ) return
 
     console.log(formValues)
-
-    //TODO: cerrar modal, Remover errores en pantalla
   }
 
   return (
     <Modal
-      isOpen={ isOpen }
-      onRequestClose={ onCloseModal }
+      isOpen={ isDateModalOpen }
+      onRequestClose={ closeDateModal }
       style={ customStyles }
       className='modal'
       overlayClassName='modal-fondo'
