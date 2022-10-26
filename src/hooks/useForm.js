@@ -20,6 +20,7 @@ export const useForm = ( initialState = {} ) => {
 
   return{
     formValues,
+    setFormValues,
     ...formValues,
     onInputChange,
     onDateChanged,

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Modal from 'react-modal'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import { addHours, differenceInSeconds } from 'date-fns'
@@ -7,7 +7,7 @@ import Swal from 'sweetalert2'
 
 import 'react-datepicker/dist/react-datepicker.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
-import { useForm, useUiStore } from '../../hooks';
+import { useCalendarStore, useForm, useUiStore } from '../../hooks';
 
 registerLocale('es', es)
 Modal.setAppElement('#root')
@@ -23,9 +23,9 @@ const customStyles = {
   }
 }
 
-const dates = {
-  title: 'Fernanda',
-  notes: 'Velásquez',
+const eventDefault = {
+  title: '',
+  notes: '',
   start: new Date(),
   end: addHours( new Date(), 2 )
 }
@@ -34,7 +34,8 @@ const dates = {
 export const CalendarModal = () => {
 
   const { isDateModalOpen, closeDateModal } = useUiStore()
-  const { formValues, onInputChange, onDateChanged } = useForm( dates )
+  const { activeEvent, startSavingEvent } = useCalendarStore()
+  const { formValues, setFormValues, onInputChange, onDateChanged } = useForm( eventDefault )
   const [ formSubmitted, setFormSubmitted ] = useState( false )
 
   const titleClass = useMemo(() => {
@@ -44,7 +45,15 @@ export const CalendarModal = () => {
   }, [ formValues.title, formSubmitted ])
 
 
-  const onSubmit = ( event ) => {
+  useEffect(() => {
+    if( activeEvent !== null ){
+      setFormValues({ ...activeEvent })
+    }
+  }, [ activeEvent ])
+  
+
+
+  const onSubmit = async ( event ) => {
     event.preventDefault()
     setFormSubmitted( true )
 
@@ -58,6 +67,11 @@ export const CalendarModal = () => {
     if( formValues.title.length <= 0 ) return
 
     console.log(formValues)
+
+
+    await startSavingEvent( formValues )
+    closeDateModal()
+    setFormSubmitted( false )
   }
 
   return (
