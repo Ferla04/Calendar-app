@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
 
 export const uiSlice = createSlice({
   name: 'ui',
@@ -13,8 +13,8 @@ export const uiSlice = createSlice({
       state.isDateModalOpen = false
     },
   }
-});
+})
 
 
 // Action creators are generated for each case reducer function
-export const { onOpenDateModal, onCloseDateModal } = uiSlice.actions;
+export const { onOpenDateModal, onCloseDateModal } = uiSlice.actions
