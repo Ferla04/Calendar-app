@@ -8,6 +8,9 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 10101
 
+// Lectura y parseo del body
+app.use(express.json())
+
 // Directorio público
 app.use(express.static('./public'))
 
