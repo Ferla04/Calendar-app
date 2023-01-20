@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import routes from './routes/index.js'
 import { dbConnection } from './database/config.js'
@@ -14,10 +15,7 @@ const PORT = process.env.PORT || 10101
 dbConnection()
 
 // Lectura y parseo del body
-app.use(express.json())
-
-// Directorio público
-app.use(express.static('./public'))
+app.use(express.json(), cors(), express.static('./public')) // Directorio público
 
 // Rutas
 routes(app)

@@ -1,6 +1,7 @@
 import boom from '@hapi/boom'
 import bcrypt from 'bcryptjs'
 import { catchAsync } from '../helpers/catchAsync.js'
+import { generateJWT } from '../helpers/jwt.js'
 import { successResponse } from '../helpers/response.js'
 import UserTable from '../models/User.model.js'
 
@@ -17,15 +18,29 @@ export const createUser = catchAsync(async (req, res) => {
   user.password = bcrypt.hashSync(password, salt)
 
   await user.save()
-  successResponse(res, 201, { msg: 'created', uid: user.id, name: user.name })
+
+  // Generar Token
+  const token = await generateJWT(user.id, user.name)
+  successResponse(res, 201, { msg: 'created', uid: user.id, name: user.name, token })
 })
 
-export const loginUser = (req, res) => {
-  // const { email, password } = req.body
+export const loginUser = catchAsync(async (req, res) => {
+  const { email, password } = req.body
 
-  successResponse(res, 200, 'logged in')
-}
+  const user = await UserTable.findOne({ email })
+  if (!user) throw boom.badRequest('invalid email or password')
 
-export const validateToken = (req, res) => {
-  successResponse(res, 200, 'token')
-}
+  // confirmar password
+  const validPassword = bcrypt.compareSync(password, user.password)
+  if (!validPassword) throw boom.badRequest('invalid email or password')
+
+  // Genera token
+  const token = await generateJWT(user.id, user.name)
+  successResponse(res, 200, { msg: 'logged in', uid: user.id, name: user.name, token })
+})
+
+export const validateToken = catchAsync(async (req, res) => {
+  // Generar token
+  const token = await generateJWT(req.uid, req.name)
+  successResponse(res, 200, { token })
+})
