@@ -1,3 +1,4 @@
+// Auth routes /api/auth
 import express from 'express'
 import { createUser, validateToken, loginUser } from '../controllers/auth.controller.js'
 import { validatorHandler } from '../middlewares/validator.handler.js'

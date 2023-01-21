@@ -21,7 +21,7 @@ export const createUser = catchAsync(async (req, res) => {
 
   // Generar Token
   const token = await generateJWT(user.id, user.name)
-  successResponse(res, 201, { msg: 'created', uid: user.id, name: user.name, token })
+  successResponse(res, 201, { uid: user.id, name: user.name, token })
 })
 
 export const loginUser = catchAsync(async (req, res) => {
@@ -36,7 +36,7 @@ export const loginUser = catchAsync(async (req, res) => {
 
   // Genera token
   const token = await generateJWT(user.id, user.name)
-  successResponse(res, 200, { msg: 'logged in', uid: user.id, name: user.name, token })
+  successResponse(res, 200, { uid: user.id, name: user.name, token })
 })
 
 export const validateToken = catchAsync(async (req, res) => {
