@@ -19,7 +19,7 @@ app.use(express.json(), cors(), express.static('./public')) // Directorio públi
 
 // Rutas
 routes(app)
-// TODO: CRUD eventos
+
 // controlador de errores
 app.use(logErrors)
 app.use(boomErrorHandler)
