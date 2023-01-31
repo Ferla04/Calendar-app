@@ -40,7 +40,8 @@ export const loginUser = catchAsync(async (req, res) => {
 })
 
 export const validateToken = catchAsync(async (req, res) => {
+  const { uid, name } = req
   // Generar token
-  const token = await generateJWT(req.uid, req.name)
-  successResponse(res, 200, { token })
+  const token = await generateJWT(uid, name)
+  successResponse(res, 200, { token, uid, name })
 })
