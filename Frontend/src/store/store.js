@@ -3,7 +3,7 @@ import { uiSlice, calendarSlice, authSlice } from './'
 
 export const store = configureStore({
   reducer:{
-    auth: authSlice.reducer,
+    authStore: authSlice.reducer,
     calendarStore: calendarSlice.reducer,
     uiStore: uiSlice.reducer,
   },
