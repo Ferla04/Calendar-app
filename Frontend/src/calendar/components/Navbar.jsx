@@ -1,7 +1,9 @@
 import { useLayoutEffect, useRef } from 'react'
+import { useAuthStore } from '../../hooks/useAuthStore'
 
 export const Navbar = ({ setHeightNavbar }) => {
   
+  const { startLogout, user } = useAuthStore()
   const navH = useRef()
 
   useLayoutEffect(() => {
@@ -14,10 +16,13 @@ export const Navbar = ({ setHeightNavbar }) => {
       <span className='navbar-brand'>
         <i className='fas fa-calendar-alt'></i>
         &nbsp;
-        Fernanda
+        {user.name}
       </span>
 
-      <button className='btn btn-outline-danger'>
+      <button 
+        className='btn btn-outline-danger'
+        onClick={ startLogout }
+      >
         <i className='fas fa-sign-out-alt'></i>
         &nbsp;
         <span>Salir</span>
